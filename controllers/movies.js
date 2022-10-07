@@ -1,10 +1,10 @@
 const Movie = require('../models/movie');
-// const Created201 = require('../errors/Created201');
-// const Forbidden403 = require('../errors/Forbidden403');
-// const NotFound404 = require('../errors/NotFound404');
+
+const Forbidden403 = require('../errors/Forbidden403');
+const NotFound404 = require('../errors/NotFound404');
 const ServerError500 = require('../errors/ServerError500');
-// const Unauthorized401 = require('../errors/Unauthorized401');
 const BadRequest400 = require('../errors/BadRequest400');
+// const Unauthorized401 = require('../errors/Unauthorized401');
 // const Http409Conflicting = require('../errors/BadRequest400');
 
 const createMovie = async (req, res, next) => {
@@ -16,7 +16,7 @@ const createMovie = async (req, res, next) => {
     year,
     description,
     image,
-    trailerLink,
+    trailer,
     nameRU,
     nameEN,
     thumbnail,
@@ -31,7 +31,7 @@ const createMovie = async (req, res, next) => {
       year,
       description,
       image,
-      trailerLink,
+      trailer,
       nameRU,
       nameEN,
       thumbnail,
@@ -66,7 +66,32 @@ const getMovies = async (req, res, next) => {
   }
 };
 
+const deleteMovie = async (req, res, next) => {
+  const id = req.user._id;
+  const movieId = req.params._id;
+  try {
+    const movie = await Movie.findById(movieId);
+    if (!movie) {
+      next(new NotFound404(`Фильм с указанным _id:${movieId} не найден`));
+      return;
+    }
+    if (id !== String(movie.owner)) {
+      next(new Forbidden403('Вы не можите удалять чужой фильм'));
+      return;
+    }
+    const delMovie = await Movie.findByIdAndRemove(movieId);
+    res.send(delMovie);
+  } catch (err) {
+    if (err.name === 'CastError') {
+      next(new BadRequest400('Переданны некорректные данные'));
+      return;
+    }
+    next(new ServerError500('произошла ошибка на сервере'));
+  }
+};
+
 module.exports = {
   createMovie,
   getMovies,
+  deleteMovie,
 };

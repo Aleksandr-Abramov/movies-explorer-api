@@ -10,7 +10,7 @@ const Unauthorized401 = require('../errors/Unauthorized401');
 const BadRequest400 = require('../errors/BadRequest400');
 const Http409Conflicting = require('../errors/BadRequest400');
 
-const { SECRET_ENV, NODE_MODE } = process.env;
+const { JWT_SECRET, NODE_MODE } = process.env;
 
 const getUserData = async (req, res, next) => {
   const id = req.user._id;
@@ -96,7 +96,7 @@ const login = async (req, res, next) => {
     }
     const token = jwt.sign(
       { _id: user._id },
-      NODE_MODE === 'production' ? SECRET_ENV : 'SECRET',
+      NODE_MODE === 'production' ? JWT_SECRET : 'SECRET',
       { expiresIn: 3600 },
     );
     res.cookie('token', token, {
