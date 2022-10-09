@@ -2,24 +2,21 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
-const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 // Пути к файлам.
 const { NODE_MODE, DB_ADRES } = process.env;
 const { errors } = require('celebrate');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const auth = require('./middlewares/auth');
 
 const userRouter = require('./routers/users');
 const movieRouter = require('./routers/movies');
 const errorHendler = require('./middlewares/errorHendler');
+const { limiter } = require('./middlewares/limiter');
+const NotFound404 = require('./errors/NotFound404');
 
 const app = express();
 const { PORT = 3000 } = process.env;
-
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-});
 
 app.use(limiter);
 
@@ -29,6 +26,9 @@ app.use(requestLogger);
 
 app.use('/', userRouter);
 app.use('/', movieRouter);
+app.use('/*', auth, (req, res, next) => {
+  next(new NotFound404('ошибка 404, страницы не существует'));
+});
 
 app.use(errors());
 app.use(errorLogger);
