@@ -27,6 +27,6 @@ userRouter.post('/signin', celebrate({
     password: Joi.string().required(),
   }),
 }), login);
-userRouter.post('/signout', auth, logout);
+userRouter.get('/signout', auth, logout);
 
 module.exports = userRouter;
