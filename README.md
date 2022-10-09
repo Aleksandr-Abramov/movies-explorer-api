@@ -16,8 +16,8 @@ POST http://api.movies-alex.nomoredomains.icu/signup - регистрация
 GET http://api.movies-alex.nomoredomains.icu/signout - выход
 GET http://api.movies-alex.nomoredomains.icu/users/me - получить данные пользователя
 PATCH http://api.movies-alex.nomoredomains.icu/users/me - извенить данные пользователя
-GET http://api.movies-alex.nomoredomains.icu/movies - получито фильмы пользователя. Сейчас пользователь получает фильмы которые создал сам. В дальнейшем, поменяю на фильмы которые понтавильсь. Нужный сервис сейчас отсутствует.
-POST http://api.movies-alex.nomoredomains.icu/movies - создать фильм. Сейчас создается без поля movieId. В данный момент сервис MoviesExplorer отсудствует.
+GET http://api.movies-alex.nomoredomains.icu/movies - получить фильмы пользователя. Сейчас пользователь получает фильмы которые создал сам. В дальнейшем, поменяю на фильмы которые понравились. Нужный сервис сейчас отсутствует.
+POST http://api.movies-alex.nomoredomains.icu/movies - создать фильм. Сейчас создается без поля movieId. В данный момент сервис MoviesExplorer отсутствует.
 DELETE http://api.movies-alex.nomoredomains.icu/movies/:idфильма - удаление фильма
 
 ### Фикстуры
