@@ -39,7 +39,7 @@ async function main() {
   mongoose.connect(
     NODE_MODE === 'production'
       ? DB_ADRES
-      : 'mongodb://localhost:27017/moviesdb',
+      : 'mongodb://localhos:27017/moviesdb',
     {
       useNewUrlParser: true,
     },
