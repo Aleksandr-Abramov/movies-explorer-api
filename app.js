@@ -18,8 +18,6 @@ const NotFound404 = require('./errors/NotFound404');
 const app = express();
 const { PORT = 3000 } = process.env;
 
-app.use(limiter);
-
 app.use(express.json());
 app.use(cookieParser());
 app.use(requestLogger);
@@ -33,7 +31,8 @@ app.use('/*', auth, (req, res, next) => {
 app.use(errors());
 app.use(errorLogger);
 app.use(errorHandler);
-console.log(NODE_MODE !== 'production' ? 'mongodb://localhost:27017/moviesdb' : DB_ADRES);
+app.use(limiter);
+// console.log(NODE_MODE !== 'production' ? 'mongodb://localhost:27017/moviesdb' : DB_ADRES);
 
 async function main() {
   // mongoose.connect('mongodb://localhost:27017/moviesdb', {
