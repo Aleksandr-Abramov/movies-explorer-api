@@ -13,7 +13,7 @@ movieRouter.post('/movies', auth, celebrate({
   body: Joi.object().keys({
     country: Joi.string().required(),
     director: Joi.string().required(),
-    duration: Joi.string().required(),
+    duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
     image: Joi.string().pattern(regex).required(),
@@ -21,9 +21,14 @@ movieRouter.post('/movies', auth, celebrate({
     thumbnail: Joi.string().pattern(regex).required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
+    movieId: Joi.string().required(),
   }),
 }), createMovie);
 movieRouter.get('/movies', auth, getMovies);
-movieRouter.delete('/movies/:_id', auth, deleteMovie);
+movieRouter.delete('/movies/:_id', auth, celebrate({
+  params: Joi.object().keys({
+    _id: Joi.string().min(24).max(24),
+  }),
+}), deleteMovie);
 
 module.exports = movieRouter;

@@ -5,7 +5,7 @@ const User = require('../models/user');
 // const Created201 = require('../errors/Created201');
 // const Forbidden403 = require('../errors/Forbidden403');
 const NotFound404 = require('../errors/NotFound404');
-const ServerError500 = require('../errors/ServerError500');
+// const ServerError500 = require('../errors/ServerError500');
 const Unauthorized401 = require('../errors/Unauthorized401');
 const BadRequest400 = require('../errors/BadRequest400');
 const Http409Conflicting = require('../errors/BadRequest400');
@@ -26,7 +26,8 @@ const getUserData = async (req, res, next) => {
       next(new BadRequest400('данные не корректны'));
       return;
     }
-    next(new ServerError500('произошла ошибка на сервере'));
+    // next(new ServerError500('произошла ошибка на сервере'));
+    next(err);
   }
 };
 
@@ -44,10 +45,7 @@ const createUser = async (req, res, next) => {
       .send({
         name: user.name,
         email: user.email,
-        password,
-        _id: user._id,
-      })
-      .end();
+      });
   } catch (err) {
     if (err.code === 11000) {
       next(new Http409Conflicting('Пользователь с таким email существует'));
@@ -57,7 +55,8 @@ const createUser = async (req, res, next) => {
       next(new BadRequest400('Не удалось создать пользователя, данные не корректны'));
       return;
     }
-    next(new ServerError500('На сервере произошла ошибка'));
+    // next(new ServerError500('На сервере произошла ошибка'));
+    next(err);
   }
 };
 
@@ -65,18 +64,24 @@ const changeUser = async (req, res, next) => {
   const id = req.user._id;
   const userData = req.body;
   try {
+    const user = await User.findOne({ email: userData.email });
+    if (user) {
+      next(new BadRequest400('переднный email уже есть в базе. Придумайте другой email.'));
+      return;
+    }
     const updateUser = await User.findByIdAndUpdate(
       { _id: id },
       { name: userData.name, email: userData.email },
       { new: true, runValidators: true, upsert: true },
     );
-    res.status(201).send(updateUser).end();
+    res.status(201).send(updateUser);
   } catch (err) {
     if (err.name === 'ValidationError') {
       next(new BadRequest400('Переданы некорректные данные при обновлении профиля.'));
       return;
     }
-    next(new ServerError500('произошла ошибка на сервере'));
+    // next(new ServerError500('произошла ошибка на сервере'));
+    next(err);
   }
 };
 
@@ -96,7 +101,7 @@ const login = async (req, res, next) => {
     }
     const token = jwt.sign(
       { _id: user._id },
-      NODE_MODE === 'production' ? JWT_SECRET : 'SECRET',
+      NODE_MODE !== 'production' ? 'SECRET' : JWT_SECRET,
       { expiresIn: 3600 },
     );
     res.cookie('token', token, {
@@ -106,7 +111,8 @@ const login = async (req, res, next) => {
     });
     res.send({ message: 'успешный вход' }).end();
   } catch (err) {
-    next(new ServerError500('На сервере произошла ошибка'));
+    // next(new ServerError500('На сервере произошла ошибка'));
+    next(err);
   }
 };
 

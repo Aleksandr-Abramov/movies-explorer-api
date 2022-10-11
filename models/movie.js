@@ -28,10 +28,7 @@ const movieScheme = new mongoose.Schema({
     required: true,
     validate: {
       validator(data) {
-        if (isURL(data)) {
-          return true;
-        }
-        return false;
+        return isURL(data);
       },
     },
   },
@@ -40,10 +37,7 @@ const movieScheme = new mongoose.Schema({
     required: true,
     validate: {
       validator(data) {
-        if (isURL(data)) {
-          return true;
-        }
-        return false;
+        return isURL(data);
       },
     },
   },
@@ -52,10 +46,7 @@ const movieScheme = new mongoose.Schema({
     required: true,
     validate: {
       validator(data) {
-        if (isURL(data)) {
-          return true;
-        }
-        return false;
+        return isURL(data);
       },
     },
   },
@@ -64,10 +55,10 @@ const movieScheme = new mongoose.Schema({
     required: true,
     ref: userSchema,
   },
-  // movieId: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   required: true,
-  // },
+  movieId: {
+    type: Number,
+    required: true,
+  },
   nameRU: {
     type: String,
     required: true,

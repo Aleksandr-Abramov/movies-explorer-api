@@ -11,7 +11,13 @@ const {
 const auth = require('../middlewares/auth');
 
 userRouter.get('/users/me', auth, getUserData);
-userRouter.patch('/users/me', auth, changeUser);
+userRouter.patch('/users/me', auth, celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30),
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
+}), changeUser);
 
 // регистрация, авторизация, выход
 userRouter.post('/signup', celebrate({

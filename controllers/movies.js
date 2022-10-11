@@ -2,7 +2,7 @@ const Movie = require('../models/movie');
 
 const Forbidden403 = require('../errors/Forbidden403');
 const NotFound404 = require('../errors/NotFound404');
-const ServerError500 = require('../errors/ServerError500');
+// const ServerError500 = require('../errors/ServerError500');
 const BadRequest400 = require('../errors/BadRequest400');
 // const Unauthorized401 = require('../errors/Unauthorized401');
 // const Http409Conflicting = require('../errors/BadRequest400');
@@ -20,7 +20,7 @@ const createMovie = async (req, res, next) => {
     nameRU,
     nameEN,
     thumbnail,
-    // movieId,
+    movieId,
   } = req.body;
 
   try {
@@ -36,7 +36,7 @@ const createMovie = async (req, res, next) => {
       nameEN,
       thumbnail,
       owner,
-      // movieId,
+      movieId,
     });
     res.status(201).send(movie);
   } catch (err) {
@@ -51,7 +51,8 @@ const createMovie = async (req, res, next) => {
         );
         return;
       }
-      next(new ServerError500('произошла ошибка на сервере'));
+      // next(new ServerError500('произошла ошибка на сервере'));
+      next(err);
     }
   }
 };
@@ -62,7 +63,8 @@ const getMovies = async (req, res, next) => {
     const movie = await Movie.find({ owner: ownerId });
     res.send(movie);
   } catch (err) {
-    next(new ServerError500('произошла ошибка на сервере'));
+    // next(new ServerError500('произошла ошибка на сервере'));
+    next(err);
   }
 };
 
@@ -86,7 +88,8 @@ const deleteMovie = async (req, res, next) => {
       next(new BadRequest400('Переданны некорректные данные'));
       return;
     }
-    next(new ServerError500('произошла ошибка на сервере'));
+    // next(new ServerError500('произошла ошибка на сервере'));
+    next(err);
   }
 };
 

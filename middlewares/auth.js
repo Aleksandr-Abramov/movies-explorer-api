@@ -10,7 +10,7 @@ const auth = (req, res, next) => {
   }
   let payload;
   try {
-    payload = jwt.verify(token, NODE_MODE === 'production' ? JWT_SECRET : 'SECRET');
+    payload = jwt.verify(token, NODE_MODE !== 'production' ? 'SECRET' : JWT_SECRET);
   } catch (err) {
     return next(new Unauthorized401('Необходима авторизация'));
   }
