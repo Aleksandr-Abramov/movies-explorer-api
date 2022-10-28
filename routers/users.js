@@ -1,5 +1,10 @@
 const userRouter = require('express').Router();
-const { celebrate, Joi } = require('celebrate');
+const { celebrate } = require('celebrate');
+const {
+  validationForChangeUser,
+  validationForCreateUser,
+  validationForLogin,
+} = require('../validation/validation');
 
 const {
   createUser,
@@ -11,28 +16,11 @@ const {
 const auth = require('../middlewares/auth');
 
 userRouter.get('/users/me', auth, getUserData);
-userRouter.patch('/users/me', auth, celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
-  }),
-}), changeUser);
+userRouter.patch('/users/me', auth, celebrate(validationForChangeUser), changeUser);
 
 // регистрация, авторизация, выход
-userRouter.post('/signup', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
-  }),
-}), createUser);
-userRouter.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
-  }),
-}), login);
+userRouter.post('/signup', celebrate(validationForCreateUser), createUser);
+userRouter.post('/signin', celebrate(validationForLogin), login);
 userRouter.get('/signout', auth, logout);
 
 module.exports = userRouter;

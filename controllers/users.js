@@ -20,13 +20,15 @@ const getUserData = async (req, res, next) => {
       next(new NotFound404(`Пользователь по указанному _id ${id} не найден.`));
       return;
     }
-    res.send(user);
+    res.send({
+      name: user.name,
+      email: user.email,
+    });
   } catch (err) {
     if (err.kind === 'ObjectId') {
       next(new BadRequest400('данные не корректны'));
       return;
     }
-    // next(new ServerError500('произошла ошибка на сервере'));
     next(err);
   }
 };
@@ -55,7 +57,6 @@ const createUser = async (req, res, next) => {
       next(new BadRequest400('Не удалось создать пользователя, данные не корректны'));
       return;
     }
-    // next(new ServerError500('На сервере произошла ошибка'));
     next(err);
   }
 };
@@ -66,7 +67,7 @@ const changeUser = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: userData.email });
     if (user) {
-      next(new BadRequest400('переднный email уже есть в базе. Придумайте другой email.'));
+      next(new Http409Conflicting('переднный email уже есть в базе. Придумайте другой email.'));
       return;
     }
     const updateUser = await User.findByIdAndUpdate(
@@ -80,7 +81,6 @@ const changeUser = async (req, res, next) => {
       next(new BadRequest400('Переданы некорректные данные при обновлении профиля.'));
       return;
     }
-    // next(new ServerError500('произошла ошибка на сервере'));
     next(err);
   }
 };

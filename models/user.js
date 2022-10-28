@@ -15,10 +15,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
     validate: {
       validator(data) {
-        if (isEmail(data)) {
-          return true;
-        }
-        return false;
+        return isEmail(data);
       },
     },
   },
