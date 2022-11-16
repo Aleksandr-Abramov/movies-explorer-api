@@ -2,6 +2,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 require('dotenv').config();
 // Пути к файлам.
 const { NODE_MODE, DB_ADRES } = process.env;
@@ -17,7 +18,10 @@ const NotFound404 = require('./errors/NotFound404');
 
 const app = express();
 const { PORT = 3000 } = process.env;
-
+app.use(cors({
+  origin: ['http://localhost:3001'],
+  credentials: true,
+}));
 app.use(express.json());
 app.use(cookieParser());
 app.use(requestLogger);

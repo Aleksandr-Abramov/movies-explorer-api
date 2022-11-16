@@ -21,6 +21,7 @@ const getUserData = async (req, res, next) => {
       return;
     }
     res.send({
+      id: user._id,
       name: user.name,
       email: user.email,
     });
@@ -106,12 +107,13 @@ const login = async (req, res, next) => {
     );
     res.cookie('token', token, {
       maxAge: 3600000,
-      httpOnly: true,
-      sameSite: true,
+      sameSite: 'None',
+      secure: true,
+      httpOnly: false,
+      // sameSite: true,
     });
     res.send({ message: 'успешный вход' }).end();
   } catch (err) {
-    // next(new ServerError500('На сервере произошла ошибка'));
     next(err);
   }
 };
