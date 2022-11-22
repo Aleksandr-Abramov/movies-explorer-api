@@ -19,7 +19,7 @@ const NotFound404 = require('./errors/NotFound404');
 const app = express();
 const { PORT = 3000 } = process.env;
 app.use(cors({
-  origin: ['http://localhost:3001'],
+  origin: ['http://localhost:3001', 'http://localhost:3000'],
   credentials: true,
 }));
 app.use(express.json());

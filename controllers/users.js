@@ -107,10 +107,10 @@ const login = async (req, res, next) => {
     );
     res.cookie('token', token, {
       maxAge: 3600000,
-      sameSite: 'None',
+      // sameSite: 'None',
       secure: true,
       httpOnly: false,
-      // sameSite: true,
+      sameSite: false,
     });
     res.send({ message: 'успешный вход' }).end();
   } catch (err) {
