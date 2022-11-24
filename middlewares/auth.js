@@ -5,7 +5,7 @@ const Unauthorized401 = require('../errors/Unauthorized401');
 
 const auth = (req, res, next) => {
   const { token } = req.cookies;
-  console.log(token);
+
   if (!token) {
     return next(new Unauthorized401('Необходима авторизация11'));
   }

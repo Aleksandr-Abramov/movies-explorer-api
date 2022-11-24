@@ -8,7 +8,7 @@ const NotFound404 = require('../errors/NotFound404');
 // const ServerError500 = require('../errors/ServerError500');
 const Unauthorized401 = require('../errors/Unauthorized401');
 const BadRequest400 = require('../errors/BadRequest400');
-const Http409Conflicting = require('../errors/BadRequest400');
+const Http409Conflicting = require('../errors/Http409Conflicting');
 
 const { JWT_SECRET, NODE_MODE } = process.env;
 
@@ -68,6 +68,7 @@ const changeUser = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: userData.email });
     if (user) {
+      console.log('dsad');
       next(new Http409Conflicting('переднный email уже есть в базе. Придумайте другой email.'));
       return;
     }
@@ -79,6 +80,7 @@ const changeUser = async (req, res, next) => {
     res.status(201).send(updateUser);
   } catch (err) {
     if (err.name === 'ValidationError') {
+      console.log('dsad111');
       next(new BadRequest400('Переданы некорректные данные при обновлении профиля.'));
       return;
     }
@@ -107,10 +109,10 @@ const login = async (req, res, next) => {
     );
     res.cookie('token', token, {
       maxAge: 3600000,
-      // sameSite: 'None',
+      sameSite: 'None',
       secure: true,
-      httpOnly: false,
-      sameSite: false,
+      httpOnly: true,
+      // sameSite: false,
     });
     res.send({ message: 'успешный вход' }).end();
   } catch (err) {
