@@ -68,7 +68,6 @@ const changeUser = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: userData.email });
     if (user) {
-      console.log('dsad');
       next(new Http409Conflicting('переднный email уже есть в базе. Придумайте другой email.'));
       return;
     }
