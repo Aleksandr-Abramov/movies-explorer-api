@@ -18,10 +18,17 @@ const NotFound404 = require('./errors/NotFound404');
 
 const app = express();
 const { PORT = 3000 } = process.env;
+
 app.use(cors({
-  origin: ['http://localhost:3001', 'http://localhost:3000'],
   credentials: true,
+  origin: [
+  		'http://localhost:3000',
+  		'https://movies-alex.nomoredomains.icu',
+	  	'http://movies-alex.nomoredomains.icu'
+  	],
 }));
+
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(requestLogger);
