@@ -66,11 +66,11 @@ const changeUser = async (req, res, next) => {
   const id = req.user._id;
   const userData = req.body;
   try {
-    const user = await User.findOne({ email: userData.email });
-    if (user) {
-      next(new Http409Conflicting('переднный email уже есть в базе. Придумайте другой email.'));
-      return;
-    }
+    // const user = await User.findOne({ email: userData.email });
+    // if (user) {
+    //   next(new Http409Conflicting('переднный email уже есть в базе. Придумайте другой email.'));
+    //   return;
+    // }
     const updateUser = await User.findByIdAndUpdate(
       { _id: id },
       { name: userData.name, email: userData.email },
@@ -79,7 +79,6 @@ const changeUser = async (req, res, next) => {
     res.status(201).send(updateUser);
   } catch (err) {
     if (err.name === 'ValidationError') {
-      console.log('dsad111');
       next(new BadRequest400('Переданы некорректные данные при обновлении профиля.'));
       return;
     }

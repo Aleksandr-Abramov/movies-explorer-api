@@ -22,12 +22,12 @@ const { PORT = 3000 } = process.env;
 app.use(cors({
   credentials: true,
   origin: [
-  		'http://localhost:3000',
-  		'https://movies-alex.nomoredomains.icu',
-	  	'http://movies-alex.nomoredomains.icu'
-  	],
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'https://movies-alex.nomoredomains.icu',
+    'http://movies-alex.nomoredomains.icu',
+  ],
 }));
-
 
 app.use(express.json());
 app.use(cookieParser());
@@ -35,7 +35,7 @@ app.use(requestLogger);
 
 app.use('/', userRouter);
 app.use('/', movieRouter);
-app.use('/*', auth, (req, res, next) => {
+app.use('*', auth, (req, res, next) => {
   next(new NotFound404('ошибка 404, страницы не существует'));
 });
 
