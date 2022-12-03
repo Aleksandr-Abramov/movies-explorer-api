@@ -12,9 +12,11 @@ const {
   login,
   logout,
   changeUser,
+  getCookies,
 } = require('../controllers/users');
 const auth = require('../middlewares/auth');
 
+userRouter.get('/getcookies', getCookies);
 userRouter.get('/users/me', auth, getUserData);
 userRouter.patch('/users/me', auth, celebrate(validationForChangeUser), changeUser);
 

@@ -26,6 +26,7 @@ const getUserData = async (req, res, next) => {
       email: user.email,
     });
   } catch (err) {
+    console.log(err);
     if (err.kind === 'ObjectId') {
       next(new BadRequest400('данные не корректны'));
       return;
@@ -122,10 +123,29 @@ const logout = async (req, res) => {
   res.clearCookie('token');
   res.send({ message: 'Выход, куки удалины' });
 };
+
+const getCookies = async (req, res, next) => {
+  const { token } = req.cookies;
+  try {
+    if (token === undefined) {
+      res.send({ access: false });
+      return;
+      // return next(new Unauthorized401('куки отсутствуют'));
+    }
+    // const payload = jwt.verify(token, NODE_MODE !== 'production' ? 'SECRET' : JWT_SECRET);
+    // return res.send({ _id: payload._id });
+    res.send({ access: true });
+    return;
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getUserData,
   createUser,
   login,
   logout,
   changeUser,
+  getCookies,
 };
