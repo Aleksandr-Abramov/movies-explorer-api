@@ -67,11 +67,11 @@ const changeUser = async (req, res, next) => {
   const id = req.user._id;
   const userData = req.body;
   try {
-    // const user = await User.findOne({ email: userData.email });
-    // if (user) {
-    //   next(new Http409Conflicting('переднный email уже есть в базе. Придумайте другой email.'));
-    //   return;
-    // }
+    const user = await User.findOne({ email: userData.email });
+    if (user) {
+      next(new Http409Conflicting('переднный email уже есть в базе. Придумайте другой email.'));
+      return;
+    }
     const updateUser = await User.findByIdAndUpdate(
       { _id: id },
       { name: userData.name, email: userData.email },
@@ -113,7 +113,7 @@ const login = async (req, res, next) => {
       httpOnly: true,
       // sameSite: false,
     });
-    res.send({ message: 'успешный вход' }).end();
+    res.send({ cookie: token }).end();
   } catch (err) {
     next(err);
   }
@@ -126,14 +126,16 @@ const logout = async (req, res) => {
 
 const getCookies = async (req, res, next) => {
   const { token } = req.cookies;
+  const cookies = req.body;
   try {
-    if (token === undefined) {
+    if (cookies.token === '') {
       res.send({ access: false });
       return;
-      // return next(new Unauthorized401('куки отсутствуют'));
     }
-    // const payload = jwt.verify(token, NODE_MODE !== 'production' ? 'SECRET' : JWT_SECRET);
-    // return res.send({ _id: payload._id });
+    if (cookies.token !== token) {
+      res.send({ access: false });
+      return;
+    }
     res.send({ access: true });
     return;
   } catch (err) {

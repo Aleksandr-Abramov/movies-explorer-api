@@ -16,13 +16,13 @@ const {
 } = require('../controllers/users');
 const auth = require('../middlewares/auth');
 
-userRouter.get('/getcookies', getCookies);
+userRouter.post('/getcookies', getCookies);
 userRouter.get('/users/me', auth, getUserData);
 userRouter.patch('/users/me', auth, celebrate(validationForChangeUser), changeUser);
 
 // регистрация, авторизация, выход
 userRouter.post('/signup', celebrate(validationForCreateUser), createUser);
 userRouter.post('/signin', celebrate(validationForLogin), login);
-userRouter.get('/signout', auth, logout);
+userRouter.get('/signout', logout);
 
 module.exports = userRouter;
